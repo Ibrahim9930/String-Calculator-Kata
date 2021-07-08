@@ -8,15 +8,21 @@ namespace StringCalculatorKata
         {
             if (!sequence.Any())
                 return 0;
+            
             var numberStrings = sequence.Split(',');
-            switch (numberStrings.Length)
+            
+            return AddNumbersInAStringSequence(numberStrings);
+        }
+
+        private static int AddNumbersInAStringSequence(string[] numberStrings)
+        {
+            int sum = 0;
+            foreach (var numberString in numberStrings)
             {
-                case 1:
-                    return ParseInt(numberStrings[0]);
-                case 2:
-                    return ParseInt(numberStrings[0]) + ParseInt(numberStrings[1]);
-                default: return -1;
+                sum += ParseInt(numberString);
             }
+
+            return sum;
         }
 
         private static int ParseInt(string numberString)

@@ -11,6 +11,7 @@ namespace StringCalculatorKataTests
         [InlineData("",0)]
         [InlineData("1",1)]
         [InlineData("1,2",3)]
+        [InlineData("1,2,3",6)]
         public void StringCalculatorAdd_EmptyString_Zero(string numberSequence, int summation)
         {
 
