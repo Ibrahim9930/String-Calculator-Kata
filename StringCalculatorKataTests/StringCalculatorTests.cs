@@ -7,31 +7,19 @@ namespace StringCalculatorKataTests
 {
     public class StringCalculatorShould
     {
-        [Fact]
-        public void StringCalculatorAdd_EmptyString_Zero()
+        [Theory]
+        [InlineData("",0)]
+        [InlineData("1",1)]
+        [InlineData("1,2",3)]
+        public void StringCalculatorAdd_EmptyString_Zero(string numberSequence, int summation)
         {
 
             StringCalculator stringCalculator = new StringCalculator();
-            int summationResult = stringCalculator.Add("");
-            summationResult.Should().Be(0);
+            int summationResult = stringCalculator.Add(numberSequence);
+            summationResult.Should().Be(summation);
 
-        }
-
-        [Fact]
-        public void StringCalculatorAdd_OneNumber_ParsedNumber()
-        {
-            StringCalculator stringCalculator = new StringCalculator();
-            int summationResult = stringCalculator.Add("1");
-            summationResult.Should().Be(1);
         }
         
-        [Fact]
-        public void StringCalculatorAdd_TwoNumbersNumber_TheirSummation()
-        {
-            StringCalculator stringCalculator = new StringCalculator();
-            int summationResult = stringCalculator.Add("1,2");
-            summationResult.Should().Be(3);
-        }
 
     }
 
