@@ -24,6 +24,14 @@ namespace StringCalculatorKataTests
             int summationResult = stringCalculator.Add("1");
             summationResult.Should().Be(1);
         }
+        
+        [Fact]
+        public void StringCalculatorAdd_TwoNumbersNumber_TheirSummation()
+        {
+            StringCalculator stringCalculator = new StringCalculator();
+            int summationResult = stringCalculator.Add("1,2");
+            summationResult.Should().Be(3);
+        }
 
     }
 
