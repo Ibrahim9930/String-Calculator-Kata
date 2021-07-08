@@ -8,7 +8,14 @@ namespace StringCalculatorKata
         {
             if (!sequence.Any())
                 return 0;
+            
             var numberStrings = sequence.Split(',');
+            
+            return AddNumbersInAStringSequence(numberStrings);
+        }
+
+        private static int AddNumbersInAStringSequence(string[] numberStrings)
+        {
             int sum = 0;
             foreach (var numberString in numberStrings)
             {
