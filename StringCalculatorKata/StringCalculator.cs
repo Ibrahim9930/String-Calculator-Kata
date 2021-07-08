@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace StringCalculatorKata
 {
@@ -8,10 +9,13 @@ namespace StringCalculatorKata
         {
             if (!sequence.Any())
                 return 0;
-            
-            var numberStrings = sequence.Split(',');
-            
+            var numberStrings = ExtractNumberStrings(sequence);
             return AddNumbersInAStringSequence(numberStrings);
+        }
+
+        private static string[] ExtractNumberStrings(string sequence)
+        {
+            return sequence.Split(',','\n');
         }
 
         private static int AddNumbersInAStringSequence(string[] numberStrings)
