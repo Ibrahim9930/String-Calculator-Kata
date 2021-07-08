@@ -16,7 +16,15 @@ namespace StringCalculatorKataTests
             summationResult.Should().Be(0);
 
         }
-        
+
+        [Fact]
+        public void StringCalculatorAdd_OneNumber_ParsedNumber()
+        {
+            StringCalculator stringCalculator = new StringCalculator();
+            int summationResult = stringCalculator.Add("1");
+            summationResult.Should().Be(1);
+        }
+
     }
 
 

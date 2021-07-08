@@ -4,8 +4,10 @@
     {
         public int Add(string sequence)
         {
+            if (sequence.Length == 0)
+                return 0;
             
-            return sequence.Length;
+            return int.Parse(sequence);
         }
     }
 }
