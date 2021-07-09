@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 
@@ -14,7 +15,28 @@ namespace StringCalculatorKata
             if (!sequence.Any())
                 return 0;
             var numberStrings = ExtractNumberStrings(sequence);
+            CheckForNegativeNumbers(numberStrings);
             return AddNumbersInAStringSequence(numberStrings);
+        }
+
+        private void CheckForNegativeNumbers(string[] numberStrings)
+        {
+            string illegalNumbers = "";
+            foreach (var numberString in numberStrings)
+            {
+                int parsedNumber = ParseInt(numberString);
+                if (parsedNumber < 0)
+                    illegalNumbers += $"{numberString}, ";
+            }
+
+            if (illegalNumbers.Length != 0)
+                throw new Exception(
+                    $"negatives are not allowed : {RemoveTrailingCommaAndWhiteSpace(illegalNumbers)}");
+        }
+
+        private static string RemoveTrailingCommaAndWhiteSpace(string illegalNumbers)
+        {
+            return illegalNumbers.TrimEnd(',', ' ');
         }
 
         private static string[] ExtractNumberStrings(string sequence)
@@ -40,14 +62,14 @@ namespace StringCalculatorKata
 
             return CustomDelimiterRegex.IsMatch(firstLine);
         }
-        
+
         private static string GetCustomDelimiter(string sequence)
         {
             var firstLine = GetFirstLine(sequence);
             string customDelimiter = CustomDelimiterRegex.Match(firstLine).Value;
             return Regex.Escape(customDelimiter);
         }
-        
+
         private static string GetFirstLine(string sequence)
         {
             return sequence.Split("\n").FirstOrDefault();
@@ -61,15 +83,22 @@ namespace StringCalculatorKata
                 sequence = sequence.Remove(0, firstLine.Length + 1);
             }
         }
-        
+
         private static int AddNumbersInAStringSequence(string[] numberStrings)
         {
             int sum = 0;
+            string illegalNumbers = "";
             foreach (var numberString in numberStrings)
             {
+                int parsedNumber = ParseInt(numberString);
+                if (parsedNumber < 0)
+                    illegalNumbers += $"{numberString}, ";
                 sum += ParseInt(numberString);
             }
 
+            if (illegalNumbers.Length != 0)
+                throw new Exception(
+                    $"negatives are not allowed : {illegalNumbers.TrimEnd(',', ' ')}");
             return sum;
         }
 
