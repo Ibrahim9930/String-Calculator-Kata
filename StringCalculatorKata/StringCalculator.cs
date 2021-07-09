@@ -15,7 +15,28 @@ namespace StringCalculatorKata
             if (!sequence.Any())
                 return 0;
             var numberStrings = ExtractNumberStrings(sequence);
+            CheckForNegativeNumbers(numberStrings);
             return AddNumbersInAStringSequence(numberStrings);
+        }
+
+        private void CheckForNegativeNumbers(string[] numberStrings)
+        {
+            string illegalNumbers = "";
+            foreach (var numberString in numberStrings)
+            {
+                int parsedNumber = ParseInt(numberString);
+                if (parsedNumber < 0)
+                    illegalNumbers += $"{numberString}, ";
+            }
+
+            if (illegalNumbers.Length != 0)
+                throw new Exception(
+                    $"negatives are not allowed : {RemoveTrailingCommaAndWhiteSpace(illegalNumbers)}");
+        }
+
+        private static string RemoveTrailingCommaAndWhiteSpace(string illegalNumbers)
+        {
+            return illegalNumbers.TrimEnd(',', ' ');
         }
 
         private static string[] ExtractNumberStrings(string sequence)
@@ -77,7 +98,7 @@ namespace StringCalculatorKata
 
             if (illegalNumbers.Length != 0)
                 throw new Exception(
-                    $"negatives are not allowed : {illegalNumbers.TrimEnd(',',' ')}");
+                    $"negatives are not allowed : {illegalNumbers.TrimEnd(',', ' ')}");
             return sum;
         }
 
