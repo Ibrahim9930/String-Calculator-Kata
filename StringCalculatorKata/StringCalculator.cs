@@ -15,11 +15,17 @@ namespace StringCalculatorKata
             if (!sequence.Any())
                 return 0;
             var numberStrings = ExtractNumberStrings(sequence);
+            RemoveBigNumbers(ref numberStrings);
             CheckForNegativeNumbers(numberStrings);
             return AddNumbersInAStringSequence(numberStrings);
         }
 
-        private void CheckForNegativeNumbers(string[] numberStrings)
+        private static void RemoveBigNumbers(ref List<string> numberStrings)
+        {
+            numberStrings = numberStrings.Where(e => ParseInt(e) < 1000).ToList();
+        }
+
+        private void CheckForNegativeNumbers(List<string> numberStrings)
         {
             string illegalNumbers = "";
             foreach (var numberString in numberStrings)
@@ -39,11 +45,11 @@ namespace StringCalculatorKata
             return illegalNumbers.TrimEnd(',', ' ');
         }
 
-        private static string[] ExtractNumberStrings(string sequence)
+        private static List<string> ExtractNumberStrings(string sequence)
         {
             string separator = GetSeparator(sequence);
             RemoveCustomDelimiterSpecification(ref sequence);
-            return Regex.Split(sequence, separator);
+            return Regex.Split(sequence, separator).ToList();
         }
 
         private static string GetSeparator(string sequence)
@@ -84,7 +90,7 @@ namespace StringCalculatorKata
             }
         }
 
-        private static int AddNumbersInAStringSequence(string[] numberStrings)
+        private static int AddNumbersInAStringSequence(List<string> numberStrings)
         {
             int sum = 0;
             string illegalNumbers = "";

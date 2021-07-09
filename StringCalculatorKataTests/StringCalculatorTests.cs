@@ -30,6 +30,7 @@ namespace StringCalculatorKataTests
 
         [Theory]
         [InlineData("1,2", 3)]
+        [InlineData("1,999",1000)]
         [InlineData("1,2,3", 6)]
         public void StringCalculatorAdd_MultiNumberSequence_SequenceSummation(string numberSequence, int summation)
         {
@@ -60,6 +61,7 @@ namespace StringCalculatorKataTests
         [InlineData("-1,2,3","negatives are not allowed : -1")]
         [InlineData("-1,-2,3","negatives are not allowed : -1, -2")]
         [InlineData("-1,-2,-3","negatives are not allowed : -1, -2, -3")]
+        [InlineData("-1000,-2,-3","negatives are not allowed : -1000, -2, -3")]
         [InlineData("//|\n-1|-2|-3","negatives are not allowed : -1, -2, -3")]
         public void StringCalculatorAdd_NegativeNumbersInSequence_ThrowsException(string numberSequence,
             string exceptionMessage)
@@ -75,6 +77,15 @@ namespace StringCalculatorKataTests
             addAction.Should().NotThrow<Exception>();
         }
         
+        [Theory]
+        [InlineData("1000,2",2)]
+        [InlineData("1000,1000,1000",0)]
+        public void StringCalculatorAdd_BigNumbersInSequence_IgnoreNumbersInSummation(string numberSequence,
+            int result)
+        {
+            int summationResult = _stringCalculator.Add(numberSequence);
+            summationResult.Should().Be(result);
+        }
 
     }
 }
