@@ -44,6 +44,16 @@ namespace StringCalculatorKataTests
             int summationResult = _stringCalculator.Add("1\n2,3");
             summationResult.Should().Be(6);
         }
+
+        [Theory]
+        [InlineData("//;\n1;2;3",6)]
+        [InlineData("//|\n1|2|3",6)]
+        [InlineData("//separator\n1separator2separator3",6)]
+        public void StringCalculatorAdd_CustomDelimiterSeperatedSequenceString_SequenceSummation(string numberSequence,int result)
+        {
+            int summationResult = _stringCalculator.Add(numberSequence);
+            summationResult.Should().Be(result);
+        }
     }
 
 
