@@ -12,10 +12,9 @@ namespace StringCalculatorKataTests
         public StringCalculatorShould()
         {
             _stringCalculator = new StringCalculator();
-
         }
-        [Fact]
 
+        [Fact]
         public void StringCalculatorAdd_EmptySequenceString_Zero()
         {
             int summationResult = _stringCalculator.Add("");
@@ -32,7 +31,7 @@ namespace StringCalculatorKataTests
         [Theory]
         [InlineData("1,2", 3)]
         [InlineData("1,2,3", 6)]
-        public void StringCalculatorAdd_MultiNumberSequence_SequenceSummation(string numberSequence,int summation)
+        public void StringCalculatorAdd_MultiNumberSequence_SequenceSummation(string numberSequence, int summation)
         {
             int summationResult = _stringCalculator.Add(numberSequence);
             summationResult.Should().Be(summation);
@@ -46,15 +45,36 @@ namespace StringCalculatorKataTests
         }
 
         [Theory]
-        [InlineData("//;\n1;2;3",6)]
-        [InlineData("//|\n1|2|3",6)]
-        [InlineData("//separator\n1separator2separator3",6)]
-        public void StringCalculatorAdd_CustomDelimiterSeperatedSequenceString_SequenceSummation(string numberSequence,int result)
+        [InlineData("//;\n1;2;3", 6)]
+        [InlineData("//separator\n1separator2separator3", 6)]
+        public void StringCalculatorAdd_CustomDelimiterSeperatedSequenceString_SequenceSummation(string numberSequence,
+            int result)
         {
             int summationResult = _stringCalculator.Add(numberSequence);
             summationResult.Should().Be(result);
         }
+
+        [Theory]
+        [InlineData("1,2,-3","negatives are not allowed : -3")]
+        [InlineData("1,-2,3","negatives are not allowed : -2")]
+        [InlineData("-1,2,3","negatives are not allowed : -1")]
+        [InlineData("-1,-2,3","negatives are not allowed : -1, -2")]
+        [InlineData("-1,-2,-3","negatives are not allowed : -1, -2, -3")]
+        [InlineData("//|\n-1|-2|-3","negatives are not allowed : -1, -2, -3")]
+        public void StringCalculatorAdd_NegativeNumbersInSequence_ThrowsException(string numberSequence,
+            string exceptionMessage)
+        {
+            Action addAction = ()=>  _stringCalculator.Add(numberSequence);
+            addAction.Should().Throw<Exception>().Which.Message.Should().Be(exceptionMessage);
+        }
+        
+        [Fact]
+        public void StringCalculatorAdd_NegativeZeroInSequence_AcceptsSequence()
+        {
+            Action addAction = ()=>  _stringCalculator.Add("-0,1,2");
+            addAction.Should().NotThrow<Exception>();
+        }
+        
+
     }
-
-
 }
