@@ -44,7 +44,8 @@ namespace StringCalculatorKata
         private static string GetCustomDelimiter(string sequence)
         {
             var firstLine = GetFirstLine(sequence);
-            return CustomDelimiterRegex.Match(firstLine).Value;
+            string customDelimiter = CustomDelimiterRegex.Match(firstLine).Value;
+            return Regex.Escape(customDelimiter);
         }
         
         private static string GetFirstLine(string sequence)

@@ -47,6 +47,7 @@ namespace StringCalculatorKataTests
 
         [Theory]
         [InlineData("//;\n1;2;3",6)]
+        [InlineData("//|\n1|2|3",6)]
         [InlineData("//separator\n1separator2separator3",6)]
         public void StringCalculatorAdd_CustomDelimiterSeperatedSequenceString_SequenceSummation(string numberSequence,int result)
         {
