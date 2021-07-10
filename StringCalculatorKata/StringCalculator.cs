@@ -9,41 +9,57 @@ namespace StringCalculatorKata
     {
         private static readonly Regex CustomDelimiterRegex = new Regex("(?<=(//)).*");
         private const string DefaultDelimiter = ",|\n";
+        public event Action DoneAddLoop;
+        public int BigNumberThreshold { get; set; } = 1000;
+        private Dictionary<string, ILoopAction> _loopActions;
+
+        private const string BigNumberCheckLoopActionKey = "Big Number Check";
+        private const string NegativeNumberCheckLoopActionKey = "Check For Negatives";
+        private const string SummationLoopActionKey = "Summation";
+        public StringCalculator()
+        {
+            _loopActions = new Dictionary<string, ILoopAction>()
+            {
+                {BigNumberCheckLoopActionKey, new CheckForBigNumbers(this)},
+                {NegativeNumberCheckLoopActionKey, new CheckForNegativesLoopAction(this)},
+                {SummationLoopActionKey, new SummationLoopAction()},
+            };
+        }
 
         public int Add(string sequence)
         {
             if (!sequence.Any())
                 return 0;
             var numberStrings = ExtractNumberStrings(sequence);
-            CheckForNegativeNumbers(numberStrings);
-            return AddNumbersInAStringSequence(numberStrings);
+            LoopOverSequencesAndApplyActions(numberStrings);
+            return (_loopActions[SummationLoopActionKey] as SummationLoopAction).Summation;
         }
 
-        private void CheckForNegativeNumbers(string[] numberStrings)
+        private void LoopOverSequencesAndApplyActions(List<string> numberStrings)
         {
-            string illegalNumbers = "";
             foreach (var numberString in numberStrings)
             {
                 int parsedNumber = ParseInt(numberString);
-                if (parsedNumber < 0)
-                    illegalNumbers += $"{numberString}, ";
+                foreach (var loopAction in _loopActions)
+                {
+                    loopAction.Value.DoAction(ref parsedNumber);
+                }
             }
 
-            if (illegalNumbers.Length != 0)
-                throw new Exception(
-                    $"negatives are not allowed : {RemoveTrailingCommaAndWhiteSpace(illegalNumbers)}");
+            OnDoneAddLoop();
         }
 
-        private static string RemoveTrailingCommaAndWhiteSpace(string illegalNumbers)
+        private void OnDoneAddLoop()
         {
-            return illegalNumbers.TrimEnd(',', ' ');
+            if (DoneAddLoop != null)
+                DoneAddLoop();
         }
-
-        private static string[] ExtractNumberStrings(string sequence)
+        
+        private static List<string> ExtractNumberStrings(string sequence)
         {
             string separator = GetSeparator(sequence);
             RemoveCustomDelimiterSpecification(ref sequence);
-            return Regex.Split(sequence, separator);
+            return Regex.Split(sequence, separator).ToList();
         }
 
         private static string GetSeparator(string sequence)
@@ -83,25 +99,7 @@ namespace StringCalculatorKata
                 sequence = sequence.Remove(0, firstLine.Length + 1);
             }
         }
-
-        private static int AddNumbersInAStringSequence(string[] numberStrings)
-        {
-            int sum = 0;
-            string illegalNumbers = "";
-            foreach (var numberString in numberStrings)
-            {
-                int parsedNumber = ParseInt(numberString);
-                if (parsedNumber < 0)
-                    illegalNumbers += $"{numberString}, ";
-                sum += ParseInt(numberString);
-            }
-
-            if (illegalNumbers.Length != 0)
-                throw new Exception(
-                    $"negatives are not allowed : {illegalNumbers.TrimEnd(',', ' ')}");
-            return sum;
-        }
-
+        
         private static int ParseInt(string numberString)
         {
             return int.Parse(numberString);
