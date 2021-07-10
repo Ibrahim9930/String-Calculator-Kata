@@ -13,13 +13,16 @@ namespace StringCalculatorKata
         public int BigNumberThreshold { get; set; } = 1000;
         private Dictionary<string, ILoopAction> _loopActions;
 
+        private const string BigNumberCheckLoopActionKey = "Big Number Check";
+        private const string NegativeNumberCheckLoopActionKey = "Check For Negatives";
+        private const string SummationLoopActionKey = "Summation";
         public StringCalculator()
         {
             _loopActions = new Dictionary<string, ILoopAction>()
             {
-                {"Big Number Check", new CheckForBigNumbers(this)},
-                {"Check For Negatives", new CheckForNegativesLoopAction(this)},
-                {"Summation", new SummationLoopAction()},
+                {BigNumberCheckLoopActionKey, new CheckForBigNumbers(this)},
+                {NegativeNumberCheckLoopActionKey, new CheckForNegativesLoopAction(this)},
+                {SummationLoopActionKey, new SummationLoopAction()},
             };
         }
 
@@ -29,7 +32,7 @@ namespace StringCalculatorKata
                 return 0;
             var numberStrings = ExtractNumberStrings(sequence);
             LoopOverSequencesAndApplyActions(numberStrings);
-            return (_loopActions["Summation"] as SummationLoopAction).Summation;
+            return (_loopActions[SummationLoopActionKey] as SummationLoopAction).Summation;
         }
 
         private void LoopOverSequencesAndApplyActions(List<string> numberStrings)
