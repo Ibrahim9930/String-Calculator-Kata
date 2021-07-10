@@ -8,7 +8,6 @@ namespace StringCalculatorKataTests
     public class StringCalculatorShould
     {
         private readonly StringCalculator _stringCalculator;
-
         public StringCalculatorShould()
         {
             _stringCalculator = new StringCalculator();
